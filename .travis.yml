@@ -23,11 +23,11 @@ script:
 after_success:
 - IMAGE_VERSION=$(cargo pkgid | grep -o "\d.\d.\d$")
 - |
-  docker build --pull
-  --cache-from "${IMAGE_NAME}"
-  --tag "{$IMAGE_NAME}:latest"
-  --tag "${IMAGE_NAME}:${IMAGE_VERSION}"
-  .
+  docker build --pull \
+    --cache-from "${IMAGE_NAME}" \
+    --tag "{$IMAGE_NAME}:latest" \
+    --tag "${IMAGE_NAME}:${IMAGE_VERSION}" \
+    .
 
 before_deploy:
 #- docker login -u "${DOCKER_USR}" -p "${DOCKER_PWD}"
