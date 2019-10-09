@@ -21,8 +21,8 @@ script:
 
 # Build docker image and tag it latest + version
 after_success:
-- IMAGE_VERSION=$(cargo pkgid | grep -o "\d.\d.\d$")
 - |
+  IMAGE_VERSION=$(cargo pkgid | grep -o "\d.\d.\d$")
   docker build --pull \
     --cache-from "${IMAGE_NAME}" \
     --tag "${IMAGE_NAME}:latest" \
