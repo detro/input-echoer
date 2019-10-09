@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -x
 
 IMAGE_NAME=$1
 echo "Will build image with name: ${IMAGE_NAME}"
