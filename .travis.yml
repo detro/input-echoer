@@ -1,9 +1,39 @@
 language: rust
 
+# Make docker available
+services:
+- docker
+
+# Build for rust stable version + enable cargo cache
 rust:
 - stable
-
 cache: cargo
 
+env:
+  global:
+  - IMAGE_NAME=secr8/input-echoer
+#  - DOCKER_USR=TODO
+#  - DOCKER_PWD=TODO
+
+# Build release version
 script:
 - cargo build --release
+
+# Build docker image and tag it latest + version
+after_success:
+- IMAGE_VERSION=$(cargo pkgid | grep -o "\d.\d.\d$")
+- |
+  docker build --pull
+  --cache-from "${IMAGE_NAME}"
+  --tag "{$IMAGE_NAME}:latest"
+  --tag "${IMAGE_NAME}:${IMAGE_VERSION}"
+  .
+
+before_deploy:
+#- docker login -u "${DOCKER_USR}" -p "${DOCKER_PWD}"
+
+#deploy:
+#  skip_cleanup: true
+#  on:
+#    branch: master
+#  provider:
