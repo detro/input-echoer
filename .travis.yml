@@ -12,21 +12,30 @@ cache: cargo
 env:
   global:
   - IMAGE_NAME=secr8/input-echoer
-#  - DOCKER_USR=TODO
-#  - DOCKER_PWD=TODO
+  - DOCKER_USR=detro
+  - secure: Q4Lrl46BC38IZuraOIryjHC3xVOFUBXmoR+ObiWnT7OD+DzYeGrgOVYKQZiUeoGxgviYRLPBxNI5Mqo6TSECF28zxeJUiree0yxTtfwCiYBp8bKY2lYqQmYBBnXeUL9WD0szX8PMmcpRR/yr1XS4eCfgeAPPm5X4DIdkaJKaiA5bXA/jNocGp7dmtQQFW8O/IpBPeGnqYZNaOhrZA+DvKZXeb1wOCIlLyk48HEMRiUbOp8p32NaBCokgKtEWWx4Y7zmEd6SY7n2/jX6Np0ZprZ1Nu4e4HN37rBYg1A4j+7zOoy/yg3J0IRmSTl9RtzRLm6I7Sz+/oDR6g4AiKeLEs5LCyhEnz7p3TvE9+NwKDFkdh0V45x7DMq0iTq99Mz2gm00kFgXJKlsSndHJ8HvKFNyzcLl8LuJbA+XLwAX48XlZf/T2aqvsI+0DyLY2kXarRTR6NyOkzOo62MzCfD375aAiSnlJEmkLuEniD4sjMbN1T/NzFI7oWqW1qv0ncLI5EIlpx8VOvgeEOtqwZMi4a5vxAIQzA39ZF7GiuIZ15VxYt3pOVqEHgbqw+sKMqQTx0Zone71qH1cmJ7bUEmn0zVyf7sP78f3jzARema5AW13LYHESBgZtW80yYElBQfadlnX9g18mfOXa0hmIjWgP38UzXnQ0ORaqIHf5xYvbbVI=
 
 # Build release version
 script:
 - cargo build --release
 
 # Build docker image and tag it latest + version
-after_success: .travis/after_success.sh ${IMAGE_NAME}
+after_success:
+- IMAGE_VERSION="$(cargo pkgid | grep -E -o "[0-9]+.[0-9]+.[0-9]+$")"
+- |
+  docker build \
+    --pull --cache-from "${IMAGE_NAME}" \
+    --tag "${IMAGE_NAME}:latest" \
+    --tag "${IMAGE_NAME}:${IMAGE_VERSION}" \
+    .
+  docker images
 
-#before_deploy:
-#- docker login -u "${DOCKER_USR}" -p "${DOCKER_PWD}"
+before_deploy:
+- docker login -u "${DOCKER_USR}" -p "${DOCKER_PWD}"
 
-#deploy:
-#  skip_cleanup: true
-#  on:
-#    branch: master
-#  provider:
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: docker push "${IMAGE_NAME}:latest" && docker push "${IMAGE_NAME}:${IMAGE_VERSION}"
+  on:
+    branch: master
