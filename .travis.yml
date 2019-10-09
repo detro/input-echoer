@@ -25,11 +25,12 @@ after_success:
 - |
   docker build --pull \
     --cache-from "${IMAGE_NAME}" \
-    --tag "{$IMAGE_NAME}:latest" \
+    --tag "${IMAGE_NAME}:latest" \
     --tag "${IMAGE_NAME}:${IMAGE_VERSION}" \
     .
+- docker images
 
-before_deploy:
+#before_deploy:
 #- docker login -u "${DOCKER_USR}" -p "${DOCKER_PWD}"
 
 #deploy:
