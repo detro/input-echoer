@@ -20,7 +20,7 @@ script:
 - cargo build --release
 
 # Build docker image and tag it latest + version
-after_success: .travis/after_success.sh
+after_success: .travis/after_success.sh ${IMAGE_NAME}
 
 #before_deploy:
 #- docker login -u "${DOCKER_USR}" -p "${DOCKER_PWD}"
