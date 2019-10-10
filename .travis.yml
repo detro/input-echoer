@@ -5,9 +5,7 @@ services:
 - docker
 
 # Build for rust stable version + enable cargo cache
-rust:
-- stable
-cache: cargo
+rust: stable
 
 env:
   global:
@@ -15,16 +13,8 @@ env:
   - secure: "C7yq617nOSMOl8v2cfJcPqqEodvKL+wZaVK/hNxXa/ei3Ks9pkGPOglXd7A3ITIUK0GvvkgZHsR+Ds13oaIW19Fh5WWyG0tC1+F/SlOYwZVZy4wDJfb4xfZGoAAhaLK9jpfjPUcTwxAORwOdXzGrsrbqFGEzRhHxkhfZ/cYwzUt61eV9VdhDPgVYMLSzzWI75VKWFk1OrCmtevZgrNZOTZAbI6KTItLdwRaXe8SYNW+N7ruFFTAeyhEcopjUuULxv/TwoHmgFZ+Lmkxc2vTGwILpi1TIXCQsoj2T5U4OQPQD9wjHTIpWUw3bn/GQe+tFGJ4JoEw069IGIvFlKTdsVD6nBF0l7KYy3E9myBP0wgip8jvHovuABd8HIaRszOxf5yf6TQUKM6indcSr+l9XS3nnP3GWQgmek4WTCct+kvSHI8fxZFQI/Xp5pEI6zsxIn5TletkERJoRxxmZA9RYV+M7Awl9lU7eNDVfRTFtSei6SmWCq0WBw0CBO5noGtp/hRAS1SCQuQUixPlhI3n08xeTp4nhuI8lQ9dAR34SHTNGvLt5FNRbel3xv02wYzHRGS6XvN+AQxu3mqq0pot81Zl6lF78GN9383PRs4u9tyRhea3uEkH9EfC0AtGetO/O3BdbK8+Cx891nHt3DgHiAAmu/seAdpsDuU1Iu/siEVU="
   - secure: "Q4Lrl46BC38IZuraOIryjHC3xVOFUBXmoR+ObiWnT7OD+DzYeGrgOVYKQZiUeoGxgviYRLPBxNI5Mqo6TSECF28zxeJUiree0yxTtfwCiYBp8bKY2lYqQmYBBnXeUL9WD0szX8PMmcpRR/yr1XS4eCfgeAPPm5X4DIdkaJKaiA5bXA/jNocGp7dmtQQFW8O/IpBPeGnqYZNaOhrZA+DvKZXeb1wOCIlLyk48HEMRiUbOp8p32NaBCokgKtEWWx4Y7zmEd6SY7n2/jX6Np0ZprZ1Nu4e4HN37rBYg1A4j+7zOoy/yg3J0IRmSTl9RtzRLm6I7Sz+/oDR6g4AiKeLEs5LCyhEnz7p3TvE9+NwKDFkdh0V45x7DMq0iTq99Mz2gm00kFgXJKlsSndHJ8HvKFNyzcLl8LuJbA+XLwAX48XlZf/T2aqvsI+0DyLY2kXarRTR6NyOkzOo62MzCfD375aAiSnlJEmkLuEniD4sjMbN1T/NzFI7oWqW1qv0ncLI5EIlpx8VOvgeEOtqwZMi4a5vxAIQzA39ZF7GiuIZ15VxYt3pOVqEHgbqw+sKMqQTx0Zone71qH1cmJ7bUEmn0zVyf7sP78f3jzARema5AW13LYHESBgZtW80yYElBQfadlnX9g18mfOXa0hmIjWgP38UzXnQ0ORaqIHf5xYvbbVI="
 
-# Install musl libc toolchain (https://www.musl-libc.org/)
-before_script:
-- rustup target add x86_64-unknown-linux-musl
-
 # Build release version (statically linked with musl libc)
 script:
-- cargo build --target x86_64-unknown-linux-musl --release
-
-# Build docker image and tag it latest + version
-after_success:
 - IMAGE_VERSION="$(cargo pkgid | grep -E -o "[0-9]+.[0-9]+.[0-9]+$")"
 - |
   docker build \

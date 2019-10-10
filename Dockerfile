@@ -1,7 +1,16 @@
 FROM rust:alpine
 
-ADD target/release/input-echoer /usr/local/bin/input-echoer
+# Copy source into image for compilation
+WORKDIR /compilation_dir
+COPY . .
 
-CMD ["input-echoer"]
+# Compile and install release version
+RUN cargo install --path .
+
+# Cleanup source
+WORKDIR /
+RUN rm -rf /compilation_dir
+
+ENTRYPOINT ["input-echoer"]
 
 
