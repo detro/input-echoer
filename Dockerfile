@@ -1,4 +1,4 @@
-FROM alpine:3.10.2
+FROM rust:alpine
 
 ADD target/release/input-echoer /usr/local/bin/input-echoer
 
